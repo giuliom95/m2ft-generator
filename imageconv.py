@@ -18,6 +18,30 @@ def image_converter(path, out_dir):
     out_img.save(Path.joinpath(out_dir, 'thumbnail_blue.jpg'), quality=70, progressive=True)
 
 
+def build_menu(page):
+    menu = ''
+    for e in ['home', 'architecture', 'research', 'about', 'contact']:
+        if page == e:
+            menu += '''
+                <div>
+                    <span>{0}</span>
+                </div>
+            '''.format(e)
+        else:
+            menu += '''
+                <div>
+                    <a href="./{0}.html">
+                        <span>{0}</span>
+                    </a>
+                </div>
+            '''.format(e)
+    return menu
+
+
+def build_list():
+    return ''
+
+
 out_dir = Path.joinpath(Path.cwd(), 'out')
 rmtree(str(out_dir))
 out_dir.mkdir()
@@ -42,7 +66,31 @@ for in_proj_dir in in_projects_dir.iterdir():
     json_fp = open(str(Path.joinpath(in_proj_dir, 'info.json')), 'r')
     info_json = load(json_fp)
     projects[proj_id] = info_json
+    json_fp.close()
 
     # Create thumbnails
     image_converter(Path.joinpath(in_proj_dir, 'preview.jpg'), out_proj_dir)
     
+
+home_html = '''
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>m2ft</title>
+        <link rel="stylesheet" type="text/css" href="style.css">
+    </head>
+    <body>
+        <div id="menu">
+            {menu}
+        </div>
+        <div id="list">
+            {list}
+        </div>
+    </body>
+</html>
+'''.format(menu=build_menu('home'), list=build_list())
+home_path = Path.joinpath(out_dir, 'home.html')
+home_path.touch()
+home_fp = open(str(home_path), 'w')
+home_fp.write(home_html)
+home_fp.close()
