@@ -1,6 +1,6 @@
 from PIL import Image
 from pathlib import Path
-from shutil import rmtree 
+from shutil import rmtree, copyfile
 from json import load
 
 
@@ -34,6 +34,13 @@ def scan_projects(in_projects_dir, out_projects_dir):
 
         # Create thumbnails
         image_converter(Path.joinpath(in_proj_dir, 'preview.jpg'), out_proj_dir)
+
+
+def copy_css(in_dir, out_dir):
+    in_css_path = Path.joinpath(in_dir, 'style.css')
+    out_css_path = Path.joinpath(out_dir, 'style.css')
+    copyfile(in_css_path, out_css_path)
+    print('CSS file copied')
 
 
 def build_menu(page):
@@ -83,6 +90,8 @@ projects = {}   # Stores info of all projects
 
 scan_projects(in_projects_dir, out_projects_dir)
     
+copy_css(in_dir, out_dir)
+
 out_home_html = '''
 <!DOCTYPE html>
 <html lang="en">
