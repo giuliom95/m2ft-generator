@@ -38,8 +38,16 @@ def build_menu(page):
     return menu
 
 
-def build_list():
-    return ''
+def build_project_list(projects, filter = None):
+    projs = ''
+    for p in projects:
+        projs += '''
+        <div>
+            {0}
+        </div>
+        '''.format(projects[p]['name'])
+    return projs
+
 
 
 out_dir = Path.joinpath(Path.cwd(), 'out')
@@ -88,7 +96,7 @@ home_html = '''
         </div>
     </body>
 </html>
-'''.format(menu=build_menu('home'), list=build_list())
+'''.format(menu=build_menu('home'), list=build_project_list(projects))
 home_path = Path.joinpath(out_dir, 'home.html')
 home_path.touch()
 home_fp = open(str(home_path), 'w')
