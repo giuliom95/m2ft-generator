@@ -3,6 +3,21 @@ from pathlib import Path
 from shutil import rmtree, copyfile
 from json import load
 
+page_header = '''
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>m&#178;ft</title>
+        <link rel="stylesheet" type="text/css" href="style.css">
+    </head>
+    <body>
+'''
+
+page_footer = '''
+    </body>
+</html>
+'''
+
 
 def image_converter(path, out_dir):
     in_img = Image.open(path)
@@ -37,18 +52,11 @@ def build_projects_dirs(in_projects_dir, out_projects_dir, projects):
         image_converter(Path.joinpath(in_proj_dir, 'preview.jpg'), out_proj_dir)
 
 
-def copy_css(in_dir, out_dir):
-    in_css_path = Path.joinpath(in_dir, 'style.css')
-    out_css_path = Path.joinpath(out_dir, 'style.css')
-    copyfile(in_css_path, out_css_path)
-    print('CSS file copied')
-
-
-def copy_logo(in_dir, out_dir):
-    in_logo_path = Path.joinpath(in_dir, 'logo.svg')
-    out_logo_path = Path.joinpath(out_dir, 'logo.svg')
-    copyfile(in_logo_path, out_logo_path)
-    print('Logo copied')
+def copy_file(name, in_dir, out_dir):
+    print('Copying {0}'.format(name))
+    in_path = Path.joinpath(in_dir, name)
+    out_path = Path.joinpath(out_dir, name)
+    copyfile(in_path, out_path)
 
 
 def build_menu(page):
@@ -125,27 +133,19 @@ projects = get_projects(in_projects_dir)
 
 build_projects_dirs(in_projects_dir, out_projects_dir, projects)
 
-copy_css(in_dir, out_dir)
-copy_logo(in_dir, out_dir)
+copy_file('style.css', in_dir, out_dir)
+copy_file('logo.svg', in_dir, out_dir)
 
-out_template_html = '''
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <title>m2ft</title>
-        <link rel="stylesheet" type="text/css" href="style.css">
-    </head>
-    <body>
-        <div id="menu">
-            <img src="./logo.svg" />
-            {menu}
-        </div>
-        <div id="list">
-            {list}
-        </div>
-    </body>
-</html>
-'''
+
+out_template_html = page_header + '''
+<div id="menu">
+    <img src="./logo.svg" />
+    {menu}
+</div>
+<div id="list">
+    {list}
+</div>
+''' + page_footer
 
 build_projects_page('home', out_dir, projects, out_template_html)
 build_projects_page('architecture', out_dir, projects, out_template_html)
