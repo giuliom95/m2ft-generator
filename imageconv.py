@@ -73,11 +73,24 @@ def build_menu(page):
 def build_project_list(projects, filter = None):
     projs = ''
     for p in projects:
+        text_color = projects[p]['color']
+        text_color_hover = text_color
+        if text_color == 'blue':
+            text_color_hover = 'black'
         projs += '''
-        <div>
-            {0}
+        <div class="block" style="background-image: url('./projects/{id}/thumbnail.jpg')">
+            <div class="text" style="color: {color_hover}">
+                {name}
+            </div>            
+            <div class="cover" style="background-image: url('./projects/{id}/thumbnail_blue.jpg'); color: {color}">
+                {name}
+            </div>
         </div>
-        '''.format(projects[p]['name'])
+        '''.format(
+            id = p, 
+            name = projects[p]['name'],
+            color = text_color,
+            color_hover = text_color_hover)
     return projs
 
 
