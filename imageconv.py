@@ -17,22 +17,23 @@ def image_converter(path, out_dir):
     out_img.save(Path.joinpath(out_dir, 'thumbnail_blue.jpg'), quality=70, progressive=True)
 
 
-def scan_projects(in_projects_dir, out_projects_dir):
+def get_projects(in_projects_dir):
+    json_fp = open(str(Path.joinpath(in_projects_dir, 'list.json')), 'r')
+    projects = load(json_fp)
+    json_fp.close()
+    return projects
 
-    for in_proj_dir in in_projects_dir.iterdir():
 
-        proj_id = in_proj_dir.stem
-        print(proj_id)
+def build_projects_dirs(in_projects_dir, out_projects_dir, projects):    
+    for p in projects:
+        proj_id = p['id']
+        print('Building project {0}'.format(proj_id))
+
+        in_proj_dir = Path.joinpath(in_projects_dir, proj_id)
 
         out_proj_dir = Path.joinpath(out_projects_dir, proj_id)
         out_proj_dir.mkdir()
 
-        json_fp = open(str(Path.joinpath(in_proj_dir, 'info.json')), 'r')
-        info_json = load(json_fp)
-        projects[proj_id] = info_json
-        json_fp.close()
-
-        # Create thumbnails
         image_converter(Path.joinpath(in_proj_dir, 'preview.jpg'), out_proj_dir)
 
 
@@ -73,10 +74,11 @@ def build_menu(page):
 def build_project_list(projects, filter = None):
     projs = ''
     for p in projects:
-        text_color = projects[p]['color']
-        text_color_hover = text_color
-        if text_color == 'blue':
-            text_color_hover = 'black'
+        text_color = 'blue'
+        text_color_hover = 'black'
+        if p['white_title']:
+            text_color = 'white'
+            text_color_hover = 'white'
         projs += '''
         <div class="block" style="background-image: url('./projects/{id}/thumbnail.jpg')">
             <div class="text" style="color: {color_hover}">
@@ -87,8 +89,8 @@ def build_project_list(projects, filter = None):
             </div>
         </div>
         '''.format(
-            id = p, 
-            name = projects[p]['name'],
+            id = p['id'], 
+            name = p['name'],
             color = text_color,
             color_hover = text_color_hover)
     return projs
@@ -106,10 +108,10 @@ out_projects_dir.mkdir()
 
 in_projects_dir = Path.joinpath(in_dir, 'projects')
 
-projects = {}   # Stores info of all projects
+projects = get_projects(in_projects_dir)
 
-scan_projects(in_projects_dir, out_projects_dir)
-    
+build_projects_dirs(in_projects_dir, out_projects_dir, projects)
+
 copy_css(in_dir, out_dir)
 copy_logo(in_dir, out_dir)
 
