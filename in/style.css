@@ -8,6 +8,23 @@ body {
     font-family: Arial, Helvetica, sans-serif;
 }
 
+h2 {
+    font-weight: 500;
+    font-size: 60px;
+    font-family: helvetica;
+}
+
+p {
+    font-size: 25px;
+    font-family: helvetica;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+p img {
+    width: 100%;
+}
+
 #menu {
     float: left;
     min-width: 360px;
@@ -36,9 +53,12 @@ body {
 }
 
 
-#list {
+.content {
     float: right;
     width: 70%;
+}
+
+.list {
     display: flex;
     flex-wrap: wrap;
 }
@@ -83,12 +103,12 @@ body {
 @media (max-width: 1200px) {
     /* Two total columns */
 
-    #list {
+    .list {
         display: block;
         flex-wrap: nowrap;
     }
 
-    .block_container {
+    .block {
         padding-top: 57%;
         font-size: 9vw;
         width: calc(100% - 100px);
@@ -110,12 +130,12 @@ body {
         margin-bottom: 40px;
     }
     
-    #list {
+    .content {
         float: none;
         width: 100%;        
     }
     
-    .block_container {
+    .block {
         padding-top: 64%;
         font-size: 12vw;
         width: 100%;
@@ -140,12 +160,12 @@ body {
         margin-bottom: 90px;
     }
     
-    #list {
+    .content {
         float: none;
         width: 100%;        
     }
     
-    .block_container {
+    .block {
         padding-top: 64%;
         font-size: 12vw;
         width: 100%;

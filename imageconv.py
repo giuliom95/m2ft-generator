@@ -13,6 +13,13 @@ page_header = '''
     <body>
 '''
 
+menu_template = '''
+<div id="menu">
+    <img src="./logo.svg" />
+    {menu}
+</div>
+'''
+
 page_footer = '''
     </body>
 </html>
@@ -117,6 +124,20 @@ def build_projects_page(page, out_dir, projects, template):
     out_home_fp.close()
 
 
+def build_about_page(in_dir, out_dir):
+    print('Building about page')
+    in_about_path = Path.joinpath(in_dir, 'about.html')
+    out_about_path = Path.joinpath(out_dir, 'about.html')
+    in_about_page_fd = open(str(in_about_path), 'r')
+    about_page_html = page_header + menu_template + in_about_page_fd.read() + page_footer
+    about_page_html = about_page_html.format(menu = build_menu('about'))
+    in_about_page_fd.close()
+    out_about_page_fd = open(str(out_about_path), 'w')
+    out_about_page_fd.write(about_page_html)
+    out_about_page_fd.close()
+    copy_file('about.jpg', in_dir, out_dir)
+
+
 out_dir = Path.joinpath(Path.cwd(), 'out')
 if out_dir.is_dir():
     rmtree(str(out_dir))
@@ -136,17 +157,16 @@ build_projects_dirs(in_projects_dir, out_projects_dir, projects)
 copy_file('style.css', in_dir, out_dir)
 copy_file('logo.svg', in_dir, out_dir)
 
-
-out_template_html = page_header + '''
-<div id="menu">
-    <img src="./logo.svg" />
-    {menu}
-</div>
-<div id="list">
-    {list}
+projects_page_template = page_header + menu_template + '''
+<div class="content">
+    <div class="list">
+        {list}
+    </div>
 </div>
 ''' + page_footer
 
-build_projects_page('home', out_dir, projects, out_template_html)
-build_projects_page('architecture', out_dir, projects, out_template_html)
-build_projects_page('research', out_dir, projects, out_template_html)
+build_projects_page('home', out_dir, projects, projects_page_template)
+build_projects_page('architecture', out_dir, projects, projects_page_template)
+build_projects_page('research', out_dir, projects, projects_page_template)
+
+build_about_page(in_dir, out_dir)
