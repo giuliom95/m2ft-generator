@@ -43,6 +43,13 @@ def copy_css(in_dir, out_dir):
     print('CSS file copied')
 
 
+def copy_logo(in_dir, out_dir):
+    in_logo_path = Path.joinpath(in_dir, 'logo.svg')
+    out_logo_path = Path.joinpath(out_dir, 'logo.svg')
+    copyfile(in_logo_path, out_logo_path)
+    print('Logo copied')
+
+
 def build_menu(page):
     menu = ''
     for e in ['home', 'architecture', 'research', 'about', 'contact']:
@@ -91,6 +98,7 @@ projects = {}   # Stores info of all projects
 scan_projects(in_projects_dir, out_projects_dir)
     
 copy_css(in_dir, out_dir)
+copy_logo(in_dir, out_dir)
 
 out_home_html = '''
 <!DOCTYPE html>
@@ -101,6 +109,7 @@ out_home_html = '''
     </head>
     <body>
         <div id="menu">
+            <img src="./logo.svg" />
             {menu}
         </div>
         <div id="list">
