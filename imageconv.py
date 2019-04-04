@@ -27,7 +27,7 @@ def get_projects(in_projects_dir):
 def build_projects_dirs(in_projects_dir, out_projects_dir, projects):    
     for p in projects:
         proj_id = p['id']
-        print('Building project {0}'.format(proj_id))
+        print('Building project "{0}"'.format(proj_id))
 
         in_proj_dir = Path.joinpath(in_projects_dir, proj_id)
 
@@ -71,29 +71,42 @@ def build_menu(page):
     return menu
 
 
-def build_project_list(projects, filter = None):
+def build_project_list(page, projects, filter = None):
     projs = ''
     for p in projects:
-        text_color = 'blue'
-        text_color_hover = 'black'
-        if p['white_title']:
-            text_color = 'white'
-            text_color_hover = 'white'
-        projs += '''
-        <div class="block" style="background-image: url('./projects/{id}/thumbnail.jpg')">
-            <div class="text" style="color: {color_hover}">
-                {name}
-            </div>            
-            <div class="cover" style="background-image: url('./projects/{id}/thumbnail_blue.jpg'); color: {color}">
-                {name}
+        if p['category'] == page or page == 'home':
+            text_color = 'blue'
+            text_color_hover = 'black'
+            if p['white_title']:
+                text_color = 'white'
+                text_color_hover = 'white'
+            projs += '''
+            <div class="block" style="background-image: url('./projects/{id}/thumbnail.jpg')">
+                <div class="text" style="color: {color_hover}">
+                    {name}
+                </div>            
+                <div class="cover" style="background-image: url('./projects/{id}/thumbnail_blue.jpg'); color: {color}">
+                    {name}
+                </div>
             </div>
-        </div>
-        '''.format(
-            id = p['id'], 
-            name = p['name'],
-            color = text_color,
-            color_hover = text_color_hover)
+            '''.format(
+                id = p['id'], 
+                name = p['name'],
+                color = text_color,
+                color_hover = text_color_hover)
     return projs
+
+
+def build_projects_page(page, out_dir, projects, template):
+    print('Building project page "{0}"'.format(page))
+    out_home_html = template.format(
+        menu = build_menu(page),
+        list = build_project_list(page, projects))
+    out_home_path = Path.joinpath(out_dir, '{0}.html'.format(page))
+    out_home_path.touch()
+    out_home_fp = open(str(out_home_path), 'w')
+    out_home_fp.write(out_home_html)
+    out_home_fp.close()
 
 
 out_dir = Path.joinpath(Path.cwd(), 'out')
@@ -115,7 +128,7 @@ build_projects_dirs(in_projects_dir, out_projects_dir, projects)
 copy_css(in_dir, out_dir)
 copy_logo(in_dir, out_dir)
 
-out_home_html = '''
+out_template_html = '''
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -132,9 +145,8 @@ out_home_html = '''
         </div>
     </body>
 </html>
-'''.format(menu=build_menu('home'), list=build_project_list(projects))
-out_home_path = Path.joinpath(out_dir, 'home.html')
-out_home_path.touch()
-out_home_fp = open(str(out_home_path), 'w')
-out_home_fp.write(out_home_html)
-out_home_fp.close()
+'''
+
+build_projects_page('home', out_dir, projects, out_template_html)
+build_projects_page('architecture', out_dir, projects, out_template_html)
+build_projects_page('research', out_dir, projects, out_template_html)
