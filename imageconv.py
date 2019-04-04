@@ -8,19 +8,18 @@ page_header = '''
 <html lang="en">
     <head>
         <title>m&#178;ft</title>
-        <link rel="stylesheet" type="text/css" href="style.css">
+        <link rel="stylesheet" type="text/css" href="{root}style.css">
     </head>
     <body>
-'''
-
-menu_template = '''
-<div id="menu">
-    <img src="./logo.svg" />
-    {menu}
-</div>
+        <div id="menu">
+            <img src="{root}logo.svg" />
+            {menu}
+        </div>
+        <div class="content">
 '''
 
 page_footer = '''
+        </div>
     </body>
 </html>
 '''
@@ -46,7 +45,24 @@ def get_projects(in_projects_dir):
     return projects
 
 
-def build_projects_dirs(in_projects_dir, out_projects_dir, projects):    
+def build_project_page(proj, in_proj_dir, out_proj_dir):
+    in_proj_info_path = Path.joinpath(in_proj_dir, 'project.html')
+    in_proj_info_fd = open(str(in_proj_info_path), 'r')
+    in_proj_info = in_proj_info_fd.read()
+    in_proj_info_fd.close()
+
+    out_proj_info_path = Path.joinpath(out_proj_dir, 'project.html')
+    out_proj_info_path.touch()
+    out_proj_info = page_header + in_proj_info + page_footer
+    out_proj_info = out_proj_info.format(
+        root='../../',
+        menu=build_menu(None, root='../../'))
+    out_proj_info_fd = open(out_proj_info_path, 'w')
+    out_proj_info_fd.write(out_proj_info)
+    out_proj_info_fd.close()
+
+
+def build_projects_dirs(in_projects_dir, out_projects_dir, projects): 
     for p in projects:
         proj_id = p['id']
         print('Building project "{0}"'.format(proj_id))
@@ -58,6 +74,8 @@ def build_projects_dirs(in_projects_dir, out_projects_dir, projects):
 
         image_converter(Path.joinpath(in_proj_dir, 'preview.jpg'), out_proj_dir)
 
+        build_project_page(p, in_proj_dir, out_proj_dir)
+
 
 def copy_file(name, in_dir, out_dir):
     print('Copying {0}'.format(name))
@@ -66,7 +84,7 @@ def copy_file(name, in_dir, out_dir):
     copyfile(in_path, out_path)
 
 
-def build_menu(page):
+def build_menu(page, root='./'):
     menu = ''
     for e in ['home', 'architecture', 'research', 'about', 'contact']:
         if page == e:
@@ -78,11 +96,11 @@ def build_menu(page):
         else:
             menu += '''
                 <div>
-                    <a href="./{0}.html">
+                    <a href="{root}{0}.html">
                         <span>{0}</span>
                     </a>
                 </div>
-            '''.format(e)
+            '''.format(e, root=root)
     return menu
 
 
@@ -97,12 +115,14 @@ def build_project_list(page, projects, filter = None):
                 text_color_hover = 'white'
             projs += '''
             <div class="block" style="background-image: url('./projects/{id}/thumbnail.jpg')">
-                <div class="text" style="color: {color_hover}">
-                    {name}
-                </div>            
-                <div class="cover" style="background-image: url('./projects/{id}/thumbnail_blue.jpg'); color: {color}">
-                    {name}
-                </div>
+                <a href="./projects/{id}/project.html">
+                    <div class="text" style="color: {color_hover}">
+                        {name}
+                    </div>            
+                    <div class="cover" style="background-image: url('./projects/{id}/thumbnail_blue.jpg'); color: {color}">
+                        {name}
+                    </div>
+                </a>
             </div>
             '''.format(
                 id = p['id'], 
@@ -115,6 +135,7 @@ def build_project_list(page, projects, filter = None):
 def build_projects_page(page, out_dir, projects, template):
     print('Building project page "{0}"'.format(page))
     out_home_html = template.format(
+        root = './',
         menu = build_menu(page),
         list = build_project_list(page, projects))
     out_home_path = Path.joinpath(out_dir, '{0}.html'.format(page))
@@ -129,8 +150,8 @@ def build_about_page(in_dir, out_dir):
     in_about_path = Path.joinpath(in_dir, 'about.html')
     out_about_path = Path.joinpath(out_dir, 'about.html')
     in_about_page_fd = open(str(in_about_path), 'r')
-    about_page_html = page_header + menu_template + in_about_page_fd.read() + page_footer
-    about_page_html = about_page_html.format(menu = build_menu('about'))
+    about_page_html = page_header + in_about_page_fd.read() + page_footer
+    about_page_html = about_page_html.format(root = './', menu = build_menu('about'))
     in_about_page_fd.close()
     out_about_page_fd = open(str(out_about_path), 'w')
     out_about_page_fd.write(about_page_html)
@@ -157,11 +178,9 @@ build_projects_dirs(in_projects_dir, out_projects_dir, projects)
 copy_file('style.css', in_dir, out_dir)
 copy_file('logo.svg', in_dir, out_dir)
 
-projects_page_template = page_header + menu_template + '''
-<div class="content">
-    <div class="list">
-        {list}
-    </div>
+projects_page_template = page_header + '''
+<div class="list">
+    {list}
 </div>
 ''' + page_footer
 

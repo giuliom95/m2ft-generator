@@ -8,7 +8,7 @@ body {
     font-family: Arial, Helvetica, sans-serif;
 }
 
-h2 {
+h1, h2 {
     font-weight: 500;
     font-size: 60px;
     font-family: helvetica;
@@ -19,6 +19,15 @@ p {
     font-family: helvetica;
     padding-top: 15px;
     padding-bottom: 15px;
+}
+
+.project_info {
+    font-size: 25px;
+    font-family: helvetica;
+    font-style: italic;
+    list-style-type: none;
+    padding: 0px;
+    margin: 0px;
 }
 
 p img {
