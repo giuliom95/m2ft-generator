@@ -1,6 +1,6 @@
 from PIL import Image
 from pathlib import Path
-from shutil import rmtree, copyfile
+from shutil import rmtree, copyfile, copytree
 from json import load
 
 page_header = '''
@@ -45,7 +45,7 @@ def get_projects(in_projects_dir):
     return projects
 
 
-def build_project_page(proj, in_proj_dir, out_proj_dir):
+def build_project_page(in_proj_dir, out_proj_dir):
     in_proj_info_path = in_proj_dir.joinpath('project.html')
     in_proj_info_fd = open(str(in_proj_info_path), 'r')
     in_proj_info = in_proj_info_fd.read()
@@ -62,6 +62,17 @@ def build_project_page(proj, in_proj_dir, out_proj_dir):
     out_proj_info_fd.close()
 
 
+def copy_project_images(proj, in_proj_dir, out_proj_dir):
+    in_proj_img_dir = in_proj_dir.joinpath('images')
+    if not in_proj_img_dir.exists():
+        return proj
+    out_proj_img_dir = out_proj_dir.joinpath('images')
+    copytree(in_proj_img_dir, out_proj_img_dir)
+    images = sorted([img.name for img in in_proj_img_dir.iterdir()])
+    proj['images'] = images
+    return proj
+    
+
 def build_projects_dirs(in_projects_dir, out_projects_dir, projects): 
     for p in projects:
         proj_id = p['id']
@@ -74,7 +85,8 @@ def build_projects_dirs(in_projects_dir, out_projects_dir, projects):
 
         image_converter(in_proj_dir.joinpath('preview.jpg'), out_proj_dir)
 
-        build_project_page(p, in_proj_dir, out_proj_dir)
+        build_project_page(in_proj_dir, out_proj_dir)
+        p = copy_project_images(p, in_proj_dir, out_proj_dir)
 
 
 def copy_file(name, in_dir, out_dir):
