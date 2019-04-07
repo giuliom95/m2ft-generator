@@ -34,24 +34,24 @@ def image_converter(path, out_dir):
 
     out_img = Image.merge('RGB', [lum, lum, blue])
 
-    in_img.save(Path.joinpath(out_dir, 'thumbnail.jpg'), quality=70, progressive=True)
-    out_img.save(Path.joinpath(out_dir, 'thumbnail_blue.jpg'), quality=70, progressive=True)
+    in_img.save(out_dir.joinpath('thumbnail.jpg'), quality=70, progressive=True)
+    out_img.save(out_dir.joinpath('thumbnail_blue.jpg'), quality=70, progressive=True)
 
 
 def get_projects(in_projects_dir):
-    json_fp = open(str(Path.joinpath(in_projects_dir, 'list.json')), 'r')
+    json_fp = open(str(in_projects_dir.joinpath('list.json')), 'r')
     projects = load(json_fp)
     json_fp.close()
     return projects
 
 
 def build_project_page(proj, in_proj_dir, out_proj_dir):
-    in_proj_info_path = Path.joinpath(in_proj_dir, 'project.html')
+    in_proj_info_path = in_proj_dir.joinpath('project.html')
     in_proj_info_fd = open(str(in_proj_info_path), 'r')
     in_proj_info = in_proj_info_fd.read()
     in_proj_info_fd.close()
 
-    out_proj_info_path = Path.joinpath(out_proj_dir, 'project.html')
+    out_proj_info_path = out_proj_dir.joinpath('project.html')
     out_proj_info_path.touch()
     out_proj_info = page_header + in_proj_info + page_footer
     out_proj_info = out_proj_info.format(
@@ -67,20 +67,20 @@ def build_projects_dirs(in_projects_dir, out_projects_dir, projects):
         proj_id = p['id']
         print('Building project "{0}"'.format(proj_id))
 
-        in_proj_dir = Path.joinpath(in_projects_dir, proj_id)
+        in_proj_dir = in_projects_dir.joinpath(proj_id)
 
-        out_proj_dir = Path.joinpath(out_projects_dir, proj_id)
+        out_proj_dir = out_projects_dir.joinpath(proj_id)
         out_proj_dir.mkdir()
 
-        image_converter(Path.joinpath(in_proj_dir, 'preview.jpg'), out_proj_dir)
+        image_converter(in_proj_dir.joinpath('preview.jpg'), out_proj_dir)
 
         build_project_page(p, in_proj_dir, out_proj_dir)
 
 
 def copy_file(name, in_dir, out_dir):
     print('Copying {0}'.format(name))
-    in_path = Path.joinpath(in_dir, name)
-    out_path = Path.joinpath(out_dir, name)
+    in_path = in_dir.joinpath(name)
+    out_path = out_dir.joinpath(name)
     copyfile(in_path, out_path)
 
 
@@ -138,7 +138,7 @@ def build_projects_page(page, out_dir, projects, template):
         root = './',
         menu = build_menu(page),
         list = build_project_list(page, projects))
-    out_home_path = Path.joinpath(out_dir, '{0}.html'.format(page))
+    out_home_path = out_dir.joinpath('{0}.html'.format(page))
     out_home_path.touch()
     out_home_fp = open(str(out_home_path), 'w')
     out_home_fp.write(out_home_html)
@@ -147,8 +147,8 @@ def build_projects_page(page, out_dir, projects, template):
 
 def build_about_page(in_dir, out_dir):
     print('Building about page')
-    in_about_path = Path.joinpath(in_dir, 'about.html')
-    out_about_path = Path.joinpath(out_dir, 'about.html')
+    in_about_path = in_dir.joinpath('about.html')
+    out_about_path = out_dir.joinpath('about.html')
     in_about_page_fd = open(str(in_about_path), 'r')
     about_page_html = page_header + in_about_page_fd.read() + page_footer
     about_page_html = about_page_html.format(root = './', menu = build_menu('about'))
@@ -159,17 +159,17 @@ def build_about_page(in_dir, out_dir):
     copy_file('about.jpg', in_dir, out_dir)
 
 
-out_dir = Path.joinpath(Path.cwd(), 'out')
-if out_dir.is_dir():
+out_dir = Path.cwd().joinpath('out')
+if out_dir.exists():
     rmtree(str(out_dir))
 out_dir.mkdir()
 
-in_dir = Path.joinpath(Path.cwd(), 'in')
+in_dir = Path.cwd().joinpath('in')
 
-out_projects_dir = Path.joinpath(out_dir, 'projects')
+out_projects_dir = out_dir.joinpath('projects')
 out_projects_dir.mkdir()
 
-in_projects_dir = Path.joinpath(in_dir, 'projects')
+in_projects_dir = in_dir.joinpath('projects')
 
 projects = get_projects(in_projects_dir)
 
