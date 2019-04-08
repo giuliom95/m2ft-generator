@@ -45,7 +45,23 @@ def get_projects(in_projects_dir):
     return projects
 
 
-def build_project_page(in_proj_dir, out_proj_dir):
+def build_slideshow(proj):
+    images = None
+    try:
+        images = proj['images']
+    except KeyError:
+        return ''
+
+    out = '<div class="slideshow">\n'
+    for img in images:
+        img['aspect'] /= 2
+        out += '<img src="./images/{name}" style="margin-left: calc(-{aspect} * 40vw);">\n'.format(**img)
+    out += '</div>\n'
+    
+    return out
+
+
+def build_project_page(proj, in_proj_dir, out_proj_dir):
     in_proj_info_path = in_proj_dir.joinpath('project.html')
     in_proj_info_fd = open(str(in_proj_info_path), 'r')
     in_proj_info = in_proj_info_fd.read()
@@ -56,7 +72,8 @@ def build_project_page(in_proj_dir, out_proj_dir):
     out_proj_info = page_header + in_proj_info + page_footer
     out_proj_info = out_proj_info.format(
         root='../../',
-        menu=build_menu(None, root='../../'))
+        menu=build_menu(None, root='../../'),
+        images=build_slideshow(proj))
     out_proj_info_fd = open(out_proj_info_path, 'w')
     out_proj_info_fd.write(out_proj_info)
     out_proj_info_fd.close()
@@ -68,8 +85,15 @@ def copy_project_images(proj, in_proj_dir, out_proj_dir):
         return proj
     out_proj_img_dir = out_proj_dir.joinpath('images')
     copytree(in_proj_img_dir, out_proj_img_dir)
-    images = sorted([img.name for img in in_proj_img_dir.iterdir()])
-    proj['images'] = images
+    images = []
+    for img in in_proj_img_dir.iterdir():
+        img_data = Image.open(img)
+        w, h = img_data.size
+        images.append({
+            'name': img.name,
+            'aspect': w / h
+        })
+    proj['images'] = sorted(images, key=lambda d: d['name'])
     return proj
     
 
@@ -85,8 +109,8 @@ def build_projects_dirs(in_projects_dir, out_projects_dir, projects):
 
         image_converter(in_proj_dir.joinpath('preview.jpg'), out_proj_dir)
 
-        build_project_page(in_proj_dir, out_proj_dir)
         p = copy_project_images(p, in_proj_dir, out_proj_dir)
+        build_project_page(p, in_proj_dir, out_proj_dir)
 
 
 def copy_file(name, in_dir, out_dir):
