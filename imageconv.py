@@ -52,7 +52,7 @@ def build_slideshow(proj):
     except KeyError:
         return ''
 
-    out = '''<div class="slideshow">
+    out = '''<div class="desktop slideshow">
         <script type="application/javascript">var num_images = {0};</script>
         <script src="../../slideshow.js"></script>
     '''.format(len(images))
@@ -73,6 +73,27 @@ def build_slideshow(proj):
         </div></a>
     </div>'''
     
+    out += '''<div class="mobile slideshow">
+        <script type="application/javascript">var num_images = {0};</script>
+        <script src="../../slideshow.js"></script>
+    '''.format(len(images))
+
+    n = 0
+    for img in images:
+        vis = 'hidden'
+        if n == 0: vis = 'visible'
+        out += '<img id="imagem{n}" src="./images/{name}" style="margin-left: calc(-{aspect} * 66.5vw); visibility: {vis}">\n'.format(
+            n=n, aspect=img['aspect']/2, name=img['name'], vis=vis)
+        n += 1
+    out += '''
+        <a href="javascript:prev_image()"><div class="arrow prev">
+            &#10094;
+        </div></a>
+        <a href="javascript:next_image()"><div class="arrow next">
+            &#10095;
+        </div></a>
+    </div>'''
+
     return out
 
 
