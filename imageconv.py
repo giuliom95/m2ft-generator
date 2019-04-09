@@ -26,7 +26,7 @@ page_footer = '''
 
 
 def image_converter(path, out_dir):
-    in_img = Image.open(path)
+    in_img = Image.open(str(path))
 
     lum = in_img.convert('L')
 
@@ -110,7 +110,7 @@ def build_project_page(proj, in_proj_dir, out_proj_dir):
         root='../../',
         menu=build_menu(None, root='../../'),
         images=build_slideshow(proj))
-    out_proj_info_fd = open(out_proj_info_path, 'w')
+    out_proj_info_fd = open(str(out_proj_info_path), 'w')
     out_proj_info_fd.write(out_proj_info)
     out_proj_info_fd.close()
 
@@ -120,10 +120,10 @@ def copy_project_images(proj, in_proj_dir, out_proj_dir):
     if not in_proj_img_dir.exists():
         return proj
     out_proj_img_dir = out_proj_dir.joinpath('images')
-    copytree(in_proj_img_dir, out_proj_img_dir)
+    copytree(str(in_proj_img_dir), str(out_proj_img_dir))
     images = []
     for img in in_proj_img_dir.iterdir():
-        img_data = Image.open(img)
+        img_data = Image.open(str(img))
         w, h = img_data.size
         images.append({
             'name': img.name,
@@ -153,7 +153,7 @@ def copy_file(name, in_dir, out_dir):
     print('Copying {0}'.format(name))
     in_path = in_dir.joinpath(name)
     out_path = out_dir.joinpath(name)
-    copyfile(in_path, out_path)
+    copyfile(str(in_path), str(out_path))
 
 
 def build_menu(page, root='./'):
@@ -262,3 +262,6 @@ build_projects_page('architecture', out_dir, projects, projects_page_template)
 build_projects_page('research', out_dir, projects, projects_page_template)
 
 build_about_page(in_dir, out_dir)
+
+input('All done! Press enter to exit')
+
