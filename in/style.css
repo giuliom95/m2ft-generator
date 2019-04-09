@@ -3,6 +3,10 @@
     padding: 0px;
 }
 
+*:focus {
+    outline: none;
+}
+
 body {
     background-color: #ffefef;
     font-family: Arial, Helvetica, sans-serif;
@@ -113,11 +117,38 @@ p img {
     height: 40vw;
     left: 50%;
     position: relative;
+    width: 0px;
 }
 
 .slideshow img {
     position: absolute;
     height: 40vw;
+}
+
+.slideshow .arrow {
+    position: absolute;
+    font-size: 2vw;
+    height: 3vw;
+    width: 2.7vw;
+    padding-left: 0.8vw;    
+    color: #ffefef;
+    background-color: black;
+    padding-top: 0.5vw;
+    margin-top: 18.5vw;
+}
+
+.slideshow .arrow:hover {
+    background-color: black;
+}
+
+.slideshow .prev {
+    margin-left: -35vw;
+}
+
+.slideshow .next {
+    margin-left: 31.3vw;
+    padding-left: 1vw;
+    width: 2.4vw;
 }
 
 @media (max-width: 1200px) {

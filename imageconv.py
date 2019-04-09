@@ -52,11 +52,26 @@ def build_slideshow(proj):
     except KeyError:
         return ''
 
-    out = '<div class="slideshow">\n'
+    out = '''<div class="slideshow">
+        <script type="application/javascript">var num_images = {0};</script>
+        <script src="../../slideshow.js"></script>
+    '''.format(len(images))
+
+    n = 0
     for img in images:
-        img['aspect'] /= 2
-        out += '<img src="./images/{name}" style="margin-left: calc(-{aspect} * 40vw);">\n'.format(**img)
-    out += '</div>\n'
+        vis = 'hidden'
+        if n == 0: vis = 'visible'
+        out += '<img id="image{n}" src="./images/{name}" style="margin-left: calc(-{aspect} * 40vw); visibility: {vis}">\n'.format(
+            n=n, aspect=img['aspect']/2, name=img['name'], vis=vis)
+        n += 1
+    out += '''
+        <a href="javascript:prev_image()"><div class="arrow prev">
+            &#10094;
+        </div></a>
+        <a href="javascript:next_image()"><div class="arrow next">
+            &#10095;
+        </div></a>
+    </div>'''
     
     return out
 
@@ -213,6 +228,7 @@ build_projects_dirs(in_projects_dir, out_projects_dir, projects)
 
 copy_file('style.css', in_dir, out_dir)
 copy_file('logo.svg', in_dir, out_dir)
+copy_file('slideshow.js', in_dir, out_dir)
 
 projects_page_template = page_header + '''
 <div class="list">
