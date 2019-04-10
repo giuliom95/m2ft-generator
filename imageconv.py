@@ -61,7 +61,7 @@ def build_slideshow(proj):
     for img in images:
         vis = 'hidden'
         if n == 0: vis = 'visible'
-        out += '<img id="image{n}" src="./images/{name}" style="margin-left: calc(-{aspect} * 40vw); visibility: {vis}">\n'.format(
+        out += '<img id="image{n}" src="./images/{name}" style="margin-left: calc(-{aspect} * 40.1vw); visibility: {vis}">\n'.format(
             n=n, aspect=img['aspect']/2, name=img['name'], vis=vis)
         n += 1
     out += '''

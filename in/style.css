@@ -68,7 +68,7 @@ p img {
 
 .content {
     float: right;
-    width: 70%;
+    width: 60%;
 }
 
 .list {
@@ -159,7 +159,7 @@ p img {
 }
 
 .slideshow .prev {
-    margin-left: -35vw;
+    margin-left: -30vw;
 }
 
 .slideshow.mobile .prev {
@@ -167,7 +167,7 @@ p img {
 }
 
 .slideshow .next {
-    margin-left: 31.3vw;
+    margin-left: 26.3vw;
     padding-left: 1vw;
     width: 2.4vw;
 }
@@ -192,7 +192,7 @@ p img {
     }
 }
 
-@media (max-width: 1100px) {
+@media (max-width: 800px) {
     /* One total column */
     
     #menu {
