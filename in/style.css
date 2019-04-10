@@ -176,6 +176,39 @@ p img {
     margin-left: 42.9vw;
 }
 
+.splash div {
+    position: absolute;
+    width: 30vw;
+    left: 50%;
+    top: 46%;
+    transform: translate(-55%, -69%);
+}
+
+.splash div img {
+    width: 100%;
+}
+
+.splash div span {
+    position: absolute;
+    font-size: 2vh;
+    width: 100%;
+    margin-top: 3vh;
+    color: rgba(0, 0, 0, 0.1);
+    animation-duration: 30s;
+    animation-name: appear;
+    text-align: center;
+}
+
+@keyframes appear {
+    from {
+        color: rgba(0,0,0,0); 
+    }
+
+    to {
+        color: rgba(0,0,0,0.1);
+    }
+}
+
 @media (max-width: 1200px) {
     /* Two total columns */
 
@@ -242,5 +275,9 @@ p img {
 
     .slideshow.desktop {
         display: none;
+    }
+
+    .splash div {
+        width: 60vw;
     }
 }

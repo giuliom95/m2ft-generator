@@ -247,10 +247,6 @@ projects = get_projects(in_projects_dir)
 
 build_projects_dirs(in_projects_dir, out_projects_dir, projects)
 
-copy_file('style.css', in_dir, out_dir)
-copy_file('logo.svg', in_dir, out_dir)
-copy_file('slideshow.js', in_dir, out_dir)
-
 projects_page_template = page_header + '''
 <div class="list">
     {list}
@@ -262,6 +258,11 @@ build_projects_page('architecture', out_dir, projects, projects_page_template)
 build_projects_page('research', out_dir, projects, projects_page_template)
 
 build_about_page(in_dir, out_dir)
+
+copy_file('style.css', in_dir, out_dir)
+copy_file('logo.svg', in_dir, out_dir)
+copy_file('slideshow.js', in_dir, out_dir)
+copy_file('index.html', in_dir, out_dir)
 
 input('All done! Press enter to exit')
 
