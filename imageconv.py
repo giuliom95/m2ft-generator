@@ -9,6 +9,7 @@ page_header = '''
     <head>
         <title>m&#178;ft</title>
         <link rel="stylesheet" type="text/css" href="{root}style.css">
+        <link rel="shortcut icon" href="{root}favicon.ico">
     </head>
     <body>
         <div id="menu">
@@ -267,6 +268,7 @@ copy_file('logo.svg', in_dir, out_dir)
 copy_file('slideshow.js', in_dir, out_dir)
 copy_file('index.html', in_dir, out_dir)
 copy_file('arrow.svg', in_dir, out_dir)
+copy_file('favicon.ico', in_dir, out_dir)
 
 input('All done! Press enter to exit')
 
