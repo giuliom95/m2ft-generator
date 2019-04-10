@@ -7,6 +7,16 @@
     outline: none;
 }
 
+::selection {
+    background: #ff6f61; /* WebKit/Blink Browsers */
+    color: #ffefef;
+}
+
+::-moz-selection {
+    background: #ff6f61; /* Gecko Browsers */
+    color: #ffefef;
+}
+
 body {
     background-color: #ffefef;
     font-family: Arial, Helvetica, sans-serif;
