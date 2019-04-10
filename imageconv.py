@@ -217,18 +217,18 @@ def build_projects_page(page, out_dir, projects, template):
     out_home_fp.close()
 
 
-def build_about_page(in_dir, out_dir):
-    print('Building about page')
-    in_about_path = in_dir.joinpath('about.html')
-    out_about_path = out_dir.joinpath('about.html')
+def build_static_page(name, in_dir, out_dir):
+    print('Building "{0}" page'.format(name))
+    in_about_path = in_dir.joinpath('{0}.html'.format(name))
+    out_about_path = out_dir.joinpath('{0}.html'.format(name))
     in_about_page_fd = open(str(in_about_path), 'r')
     about_page_html = page_header + in_about_page_fd.read() + page_footer
-    about_page_html = about_page_html.format(root = './', menu = build_menu('about'))
+    about_page_html = about_page_html.format(root = './', menu = build_menu(name))
     in_about_page_fd.close()
     out_about_page_fd = open(str(out_about_path), 'w')
     out_about_page_fd.write(about_page_html)
     out_about_page_fd.close()
-    copy_file('about.jpg', in_dir, out_dir)
+    
 
 
 out_dir = Path.cwd().joinpath('out')
@@ -257,7 +257,10 @@ build_projects_page('home', out_dir, projects, projects_page_template)
 build_projects_page('architecture', out_dir, projects, projects_page_template)
 build_projects_page('research', out_dir, projects, projects_page_template)
 
-build_about_page(in_dir, out_dir)
+build_static_page('about', in_dir, out_dir)
+copy_file('about.jpg', in_dir, out_dir)
+
+build_static_page('contact', in_dir, out_dir)
 
 copy_file('style.css', in_dir, out_dir)
 copy_file('logo.svg', in_dir, out_dir)
