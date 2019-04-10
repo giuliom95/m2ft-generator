@@ -13,7 +13,7 @@ body {
 }
 
 h1, h2 {
-    font-weight: 500;
+    font-weight: 400;
     font-size: 60px;
     font-family: helvetica;
 }
@@ -192,55 +192,34 @@ p img {
     }
 }
 
-@media (max-width: 800px) {
-    /* One total column */
-    
-    #menu {
-        float: none;
-        width: 100%;
-        position: relative;
-        margin-bottom: 50px;
-    }
-    
-    #menu img {
-        margin-bottom: 40px;
-    }
-    
-    .content {
-        float: none;
-        width: 100%;        
-    }
-    
-    .block {
-        padding-top: 64%;
-        font-size: 12vw;
-        width: 100%;
-        margin-left: 0px;
-        margin-bottom: 1%;
-    }
+@media (max-width: 800px), 
+    (max-width: 1700px) and (min-resolution: 2dppx) {
 
-    .slideshow.mobile {
-        display: block;
+    h1, h2 {
+        font-size: 11vh;
+        word-wrap: break-word;
     }
-
-    .slideshow.desktop {
-        display: none;
+    
+    p {
+        font-size: 4vh;
+        padding-top: 3vh;
+        padding-bottom: 3vh;
     }
-}
-
-@media (max-width: 1700px) 
-    and (min-resolution: 2dppx) {
+    
+    .project_info {
+        font-size: 4vh;
+    }
 
     #menu {
         float: none;
         width: 100%;
         position: relative;
-        margin-bottom: 50px;
-        font-size: 760%;
+        margin-bottom: 10vh;
+        font-size: 11vh;
     }
     
     #menu img {
-        width: 460px;
+        width: 70vw;
         margin-bottom: 90px;
     }
     
@@ -250,11 +229,11 @@ p img {
     }
     
     .block {
-        padding-top: 64%;
-        font-size: 12vw;
+        padding-top: 70%;
+        font-size: 10vh;
         width: 100%;
         margin-left: 0px;
-        margin-bottom: 1%;
+        margin-bottom: .5vh;
     }
 
     .slideshow.mobile {
