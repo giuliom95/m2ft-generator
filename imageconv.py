@@ -65,12 +65,12 @@ def build_slideshow(proj):
             n=n, aspect=img['aspect']/2, name=img['name'], vis=vis)
         n += 1
     out += '''
-        <a href="javascript:prev_image()"><div class="arrow prev">
-            &#10094;
-        </div></a>
-        <a href="javascript:next_image()"><div class="arrow next">
-            &#10095;
-        </div></a>
+        <a href="javascript:prev_image()">
+            <img class="arrow prev" src="../../arrow.svg">
+        </a>
+        <a href="javascript:next_image()">
+            <img class="arrow next" src="../../arrow.svg">
+        </a>
     </div>'''
     
     out += '''<div class="mobile slideshow">
@@ -86,12 +86,12 @@ def build_slideshow(proj):
             n=n, aspect=img['aspect']/2, name=img['name'], vis=vis)
         n += 1
     out += '''
-        <a href="javascript:prev_image()"><div class="arrow prev">
-            &#10094;
-        </div></a>
-        <a href="javascript:next_image()"><div class="arrow next">
-            &#10095;
-        </div></a>
+        <a href="javascript:prev_image()">
+            <img class="arrow prev" src="../../arrow.svg">
+        </a>
+        <a href="javascript:next_image()">
+            <img class="arrow next" src="../../arrow.svg">
+        </a>
     </div>'''
 
     return out
@@ -266,6 +266,7 @@ copy_file('style.css', in_dir, out_dir)
 copy_file('logo.svg', in_dir, out_dir)
 copy_file('slideshow.js', in_dir, out_dir)
 copy_file('index.html', in_dir, out_dir)
+copy_file('arrow.svg', in_dir, out_dir)
 
 input('All done! Press enter to exit')
 

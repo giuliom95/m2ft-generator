@@ -10,6 +10,7 @@
 body {
     background-color: #ffefef;
     font-family: Arial, Helvetica, sans-serif;
+    overflow-x: hidden;
 }
 
 h1, h2 {
@@ -136,47 +137,35 @@ p img {
 
 .slideshow .arrow {
     position: absolute;
-    font-size: 2vw;
     height: 3vw;
-    width: 2.7vw;
-    padding-left: 0.8vw;    
-    color: #ffefef;
-    background-color: black;
-    padding-top: 0.5vw;
+    width: 3vw; 
     margin-top: 18.5vw;
 }
 
 .slideshow.mobile .arrow {
-    font-size: 4vw;
     height: 6vw;
-    width: 4.7vw;
-    padding-left: 1.7vw;
-    margin-top: 29vw;
-}
-
-.slideshow .arrow:hover {
-    background-color: black;
+    width: 6vw;
+    margin-top: 31.25vw;
 }
 
 .slideshow .prev {
     margin-left: -33.4vw;
+    transform: scale(-1);
 }
 
 .slideshow.mobile .prev {
-    margin-left: -50vw;
+    margin-left: -49.5vw;
 }
 
 .slideshow .next {
-    margin-left: 30.1vw;
-    padding-left: 1vw;
-    width: 2.4vw;
+    margin-left: 30.5vw;
 }
 
 .slideshow.mobile .next {
-    margin-left: 42.9vw;
+    margin-left: 43.2vw;
 }
 
-.splash div {
+.splash {
     position: absolute;
     width: 30vw;
     left: 50%;
@@ -184,11 +173,11 @@ p img {
     transform: translate(-55%, -69%);
 }
 
-.splash div img {
+.splash img {
     width: 100%;
 }
 
-.splash div span {
+.splash div {
     position: absolute;
     font-size: 2vh;
     width: 100%;
@@ -277,7 +266,7 @@ p img {
         display: none;
     }
 
-    .splash div {
+    .splash {
         width: 60vw;
     }
 }
