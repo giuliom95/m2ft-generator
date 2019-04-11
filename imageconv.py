@@ -2,6 +2,7 @@ from PIL import Image
 from pathlib import Path
 from shutil import rmtree, copyfile, copytree
 from json import load
+import traceback
 
 page_header = '''
 <!DOCTYPE html>
@@ -28,6 +29,8 @@ page_footer = '''
 
 def image_converter(path, out_dir):
     in_img = Image.open(str(path))
+
+    in_img = in_img.convert('RGB')
 
     lum = in_img.convert('L')
 
@@ -144,7 +147,10 @@ def build_projects_dirs(in_projects_dir, out_projects_dir, projects):
         out_proj_dir = out_projects_dir.joinpath(proj_id)
         out_proj_dir.mkdir()
 
-        image_converter(in_proj_dir.joinpath('preview.jpg'), out_proj_dir)
+        try:
+            image_converter(in_proj_dir.joinpath('preview.jpg'), out_proj_dir)
+        except FileNotFoundError:
+            image_converter(in_proj_dir.joinpath('preview.png'), out_proj_dir)
 
         p = copy_project_images(p, in_proj_dir, out_proj_dir)
         build_project_page(p, in_proj_dir, out_proj_dir)
@@ -231,44 +237,53 @@ def build_static_page(name, in_dir, out_dir):
     out_about_page_fd.close()
     
 
+def build_website():
+    out_dir = Path.cwd().joinpath('out')
+    if out_dir.exists():
+        rmtree(str(out_dir))
+    out_dir.mkdir()
 
-out_dir = Path.cwd().joinpath('out')
-if out_dir.exists():
-    rmtree(str(out_dir))
-out_dir.mkdir()
+    in_dir = Path.cwd().joinpath('in')
 
-in_dir = Path.cwd().joinpath('in')
+    out_projects_dir = out_dir.joinpath('projects')
+    out_projects_dir.mkdir()
 
-out_projects_dir = out_dir.joinpath('projects')
-out_projects_dir.mkdir()
+    in_projects_dir = in_dir.joinpath('projects')
 
-in_projects_dir = in_dir.joinpath('projects')
+    projects = get_projects(in_projects_dir)
 
-projects = get_projects(in_projects_dir)
+    build_projects_dirs(in_projects_dir, out_projects_dir, projects)
 
-build_projects_dirs(in_projects_dir, out_projects_dir, projects)
+    projects_page_template = page_header + '''
+    <div class="list">
+        {list}
+    </div>
+    ''' + page_footer
 
-projects_page_template = page_header + '''
-<div class="list">
-    {list}
-</div>
-''' + page_footer
+    build_projects_page('home', out_dir, projects, projects_page_template)
+    build_projects_page('architecture', out_dir, projects, projects_page_template)
+    build_projects_page('research', out_dir, projects, projects_page_template)
 
-build_projects_page('home', out_dir, projects, projects_page_template)
-build_projects_page('architecture', out_dir, projects, projects_page_template)
-build_projects_page('research', out_dir, projects, projects_page_template)
+    build_static_page('about', in_dir, out_dir)
+    copy_file('about.jpg', in_dir, out_dir)
 
-build_static_page('about', in_dir, out_dir)
-copy_file('about.jpg', in_dir, out_dir)
+    build_static_page('contact', in_dir, out_dir)
 
-build_static_page('contact', in_dir, out_dir)
+    copy_file('style.css', in_dir, out_dir)
+    copy_file('logo.svg', in_dir, out_dir)
+    copy_file('slideshow.js', in_dir, out_dir)
+    copy_file('index.html', in_dir, out_dir)
+    copy_file('arrow.svg', in_dir, out_dir)
+    copy_file('favicon.ico', in_dir, out_dir)
 
-copy_file('style.css', in_dir, out_dir)
-copy_file('logo.svg', in_dir, out_dir)
-copy_file('slideshow.js', in_dir, out_dir)
-copy_file('index.html', in_dir, out_dir)
-copy_file('arrow.svg', in_dir, out_dir)
-copy_file('favicon.ico', in_dir, out_dir)
 
-input('All done! Press enter to exit')
+if __name__=='__main__':
+    try:
+        build_website()
+    except Exception as e:
+        print('### An error has occurred! ###')
+        print(traceback.format_exc())
+    else:
+        print('All done!')
+    input('Press enter to exit')
 
