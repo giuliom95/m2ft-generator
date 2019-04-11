@@ -30,16 +30,22 @@ page_footer = '''
 def image_converter(path, out_dir):
     in_img = Image.open(str(path))
 
-    in_img = in_img.convert('RGB')
 
     lum = in_img.convert('L')
 
     blue = Image.new('L', lum.size, (255,))
 
-    out_img = Image.merge('RGB', [lum, lum, blue])
+    blue_img = Image.merge('RGB', [lum, lum, blue])
+
+    if in_img.mode == 'RGBA':
+        mask = in_img.split()[3]
+        tmp = Image.new("RGB", in_img.size, (255, 239, 239))
+        blue_img = Image.composite(blue_img, tmp, mask)
+        tmp.paste(in_img, mask=mask)
+        in_img = tmp
 
     in_img.save(out_dir.joinpath('thumbnail.jpg'), quality=70, progressive=True)
-    out_img.save(out_dir.joinpath('thumbnail_blue.jpg'), quality=70, progressive=True)
+    blue_img.save(out_dir.joinpath('thumbnail_blue.jpg'), quality=70, progressive=True)
 
 
 def get_projects(in_projects_dir):
