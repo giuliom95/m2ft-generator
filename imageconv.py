@@ -74,12 +74,14 @@ def build_slideshow(proj):
             if mobile: printn = 'm{0}'.format(n)
 
             if img['aspect'] < (67.5 / 40):
-                imgList += '<img id="image{n}" src="./images/{name}" style="margin-left: calc(-{aspect} * 40vw); visibility: {vis};">\n'.format(
-                    n=printn, aspect=img['aspect']/2, name=img['name'], vis=vis)
+                columnheight = 40
+                if mobile: columnheight = 66.5
+                imgList += '<img id="image{n}" src="./images/{name}" style="margin-left: calc(-{aspect} * {columnheight}vw); visibility: {vis};">\n'.format(
+                    n=printn, aspect=img['aspect']/2, name=img['name'], vis=vis, columnheight=columnheight)
             else:
                 height = columnWidth/img['aspect']
                 imgList += '<img id="image{n}" src="./images/{name}" style="margin-left: calc(-{width}vw / 2); visibility: {vis}; width: {width}vw; height: {height}vw; margin-top: {margintop}vw">\n'.format(
-                    n=printn, name=img['name'], vis=vis, width=columnWidth, height=height, margintop=20-(height / 2))
+                    n=printn, name=img['name'], vis=vis, width=columnWidth, height=height, margintop=(columnheight / 2)-(height / 2))
             n += 1
         return imgList
     
