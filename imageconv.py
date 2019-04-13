@@ -62,18 +62,35 @@ def build_slideshow(proj):
     except KeyError:
         return ''
 
+    def generateImgList(columnWidth, mobile=False):
+        columnWidth -= 2
+        imgList = ''
+        n = 0
+        for img in images:
+            vis = 'hidden'
+            if n == 0: vis = 'visible'
+
+            printn = n
+            if mobile: printn = 'm{0}'.format(n)
+
+            if img['aspect'] < (67.5 / 40):
+                imgList += '<img id="image{n}" src="./images/{name}" style="margin-left: calc(-{aspect} * 40vw); visibility: {vis};">\n'.format(
+                    n=printn, aspect=img['aspect']/2, name=img['name'], vis=vis)
+            else:
+                height = columnWidth/img['aspect']
+                imgList += '<img id="image{n}" src="./images/{name}" style="margin-left: calc(-{width}vw / 2); visibility: {vis}; width: {width}vw; height: {height}vw; margin-top: {margintop}vw">\n'.format(
+                    n=printn, name=img['name'], vis=vis, width=columnWidth, height=height, margintop=20-(height / 2))
+            n += 1
+        return imgList
+    
     out = '''<div class="desktop slideshow">
         <script type="application/javascript">var num_images = {0};</script>
         <script src="../../slideshow.js"></script>
     '''.format(len(images))
 
-    n = 0
-    for img in images:
-        vis = 'hidden'
-        if n == 0: vis = 'visible'
-        out += '<img id="image{n}" src="./images/{name}" style="margin-left: calc(-{aspect} * 40vw); visibility: {vis}">\n'.format(
-            n=n, aspect=img['aspect']/2, name=img['name'], vis=vis)
-        n += 1
+
+
+    out += generateImgList(67.5)
     out += '''
         <a href="javascript:prev_image()">
             <img class="arrow prev" src="../../arrow.svg">
@@ -88,13 +105,8 @@ def build_slideshow(proj):
         <script src="../../slideshow.js"></script>
     '''.format(len(images))
 
-    n = 0
-    for img in images:
-        vis = 'hidden'
-        if n == 0: vis = 'visible'
-        out += '<img id="imagem{n}" src="./images/{name}" style="margin-left: calc(-{aspect} * 66.5vw); visibility: {vis}">\n'.format(
-            n=n, aspect=img['aspect']/2, name=img['name'], vis=vis)
-        n += 1
+    out += generateImgList(100, mobile=True)
+
     out += '''
         <a href="javascript:prev_image()">
             <img class="arrow prev" src="../../arrow.svg">
