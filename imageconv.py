@@ -29,7 +29,10 @@ page_footer = '''
 
 def image_converter(path, out_dir):
     in_img = Image.open(str(path))
-
+    if in_img.size[0] > 850:
+        ratio = in_img.size[1] / in_img.size[0]
+        new_size = (850, int(850*ratio))
+        in_img = in_img.resize(new_size, Image.BICUBIC)
 
     lum = in_img.convert('L')
 
