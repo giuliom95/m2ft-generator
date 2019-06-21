@@ -151,11 +151,21 @@ def copy_project_images(proj, in_proj_dir, out_proj_dir):
     images = []
     for img in in_proj_img_dir.iterdir():
         img_data = Image.open(str(img))
-        w, h = img_data.size
+        old_size = img_data.size
+        ratio = old_size[1] / old_size[0]
+        if old_size[0] > 1000:
+            new_size = (1000, int(1000*ratio))
+            img_data = img_data.resize(new_size, Image.BICUBIC)
+
         images.append({
             'name': img.name,
-            'aspect': w / h
+            'aspect': 1 / ratio
         })
+        out_file = out_proj_img_dir.joinpath(img.name)
+        print(f'IMG: {out_file}, {old_size} -> {img_data.size}')
+        img_data.save(out_file, quality=70, progressive=True)
+
+        
     proj['images'] = sorted(images, key=lambda d: d['name'])
     return proj
     
