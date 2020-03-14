@@ -52,7 +52,7 @@ def image_converter(path, out_dir):
 
 
 def get_projects(in_projects_dir):
-    json_fp = open(str(in_projects_dir.joinpath('list.json')), 'r')
+    json_fp = open(str(in_projects_dir.joinpath('list.json')), 'r', encoding='ISO-8859-1')
     projects = load(json_fp)
     json_fp.close()
     return projects
@@ -126,7 +126,7 @@ def build_slideshow(proj):
 
 def build_project_page(proj, in_proj_dir, out_proj_dir):
     in_proj_info_path = in_proj_dir.joinpath('project.html')
-    in_proj_info_fd = open(str(in_proj_info_path), 'r')
+    in_proj_info_fd = open(str(in_proj_info_path), 'r', encoding='ISO-8859-1')
     in_proj_info = in_proj_info_fd.read()
     in_proj_info_fd.close()
 
@@ -137,7 +137,7 @@ def build_project_page(proj, in_proj_dir, out_proj_dir):
         root='../../',
         menu=build_menu(None, root='../../'),
         images=build_slideshow(proj))
-    out_proj_info_fd = open(str(out_proj_info_path), 'w')
+    out_proj_info_fd = open(str(out_proj_info_path), 'w', encoding='ISO-8859-1')
     out_proj_info_fd.write(out_proj_info)
     out_proj_info_fd.close()
 
@@ -252,7 +252,7 @@ def build_projects_page(page, out_dir, projects, template):
         list = build_project_list(page, projects))
     out_home_path = out_dir.joinpath('{0}.html'.format(page))
     out_home_path.touch()
-    out_home_fp = open(str(out_home_path), 'w')
+    out_home_fp = open(str(out_home_path), 'w', encoding='ISO-8859-1')
     out_home_fp.write(out_home_html)
     out_home_fp.close()
 
@@ -261,11 +261,11 @@ def build_static_page(name, in_dir, out_dir):
     print('Building "{0}" page'.format(name))
     in_about_path = in_dir.joinpath('{0}.html'.format(name))
     out_about_path = out_dir.joinpath('{0}.html'.format(name))
-    in_about_page_fd = open(str(in_about_path), 'r')
+    in_about_page_fd = open(str(in_about_path), 'r', encoding='ISO-8859-1')
     about_page_html = page_header + in_about_page_fd.read() + page_footer
     about_page_html = about_page_html.format(root = './', menu = build_menu(name))
     in_about_page_fd.close()
-    out_about_page_fd = open(str(out_about_path), 'w')
+    out_about_page_fd = open(str(out_about_path), 'w', encoding='ISO-8859-1')
     out_about_page_fd.write(about_page_html)
     out_about_page_fd.close()
     
